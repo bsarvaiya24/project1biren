@@ -28,7 +28,6 @@ public class LoginService {
 		if(user == null) {
 			throw new LoginException("User was not able to login with given username and password.");
 		}
-		
 		return user;
 	}
 

@@ -19,19 +19,18 @@ import io.javalin.http.Handler;
 public class LoginController implements Controller {
 	
 	private LoginService loginService;
-	Session session = SessionUtility.getSession();
+	
 
 	public LoginController() {
 		this.loginService = new LoginService();
 	}
 	
 	private Handler loginHandler = (ctx) -> {
-		
+		Session session = SessionUtility.getSession();
 		LoginDTO loginDTO = ctx.bodyAsClass(LoginDTO.class);
 		User user = loginService.login(loginDTO,session);
 		System.out.println(user);
 		ctx.sessionAttribute("currentlyLoggedInUser", user);
-		ctx.json(user);
 		ctx.status(200);
 	};
 	
@@ -57,13 +56,13 @@ public class LoginController implements Controller {
 	
 	private Handler currentUserHandler = (ctx) -> {
 		User user = (User) ctx.sessionAttribute("currentlyLoggedInUser");
-		if(user == null) {
-			ctx.json(new MessageDTO("User is not logged in."));
+		if (user == null) {
+			MessageDTO messageDTO = new MessageDTO();
+			messageDTO.setMessage("User is not currently logged in!");
+			ctx.json(messageDTO);
+			ctx.status(400);
 		} else {
-//			ctx.json(user);
-			String html = classpathToString("/static/dash_submitter.html");
-			ctx.html(html);
-			ctx.status(200);
+			ctx.json(user);
 		}
 	};
 	

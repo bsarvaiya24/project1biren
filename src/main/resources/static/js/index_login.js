@@ -17,13 +17,14 @@ function login() {
         },
         body: JSON.stringify(data)
     }).then((response) => {
-        console.log(response);
         if (response.status === 200) {
-            window.location.href = '/dash_submitter.html';
-            console.log(response.json);
+            // window.location.href = '/dash_submitter.html';
+            window.location.href = '/landing.html';
         } else if (response.status === 401) {
             displayInvalidLogin();
-        }
+        } else {
+			console.log("status 401 executed");
+		}
     })
 }
 
