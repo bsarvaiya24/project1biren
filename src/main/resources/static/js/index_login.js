@@ -18,7 +18,11 @@ function login() {
         body: JSON.stringify(data)
     }).then((response) => {
         if (response.status === 200) {
-            window.location.href = '/landing.html';
+            // console.log(response);
+            // alert(response.json);
+            // window.location.href = '/landing.html';
+            window.location.href = '/dash_submitter.html';
+            // window.location.href = response.redirect;
         } else if (response.status === 401) {
             displayInvalidLogin();
         }

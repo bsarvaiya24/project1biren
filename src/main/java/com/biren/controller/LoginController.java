@@ -24,6 +24,7 @@ public class LoginController implements Controller {
 		User user = loginService.login(loginDTO);
 		
 		ctx.sessionAttribute("currentlyLoggedInUser", user);
+		ctx.status(200);
 	};
 	
 	private Handler getLoginHandler(String classpathPath) {

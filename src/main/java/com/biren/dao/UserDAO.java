@@ -19,6 +19,8 @@ public class UserDAO {
 	{
 		users.add(new User(1, "admin", "password"));
 	}
+	
+	
 
 	public User getUserByUsernameAndPassword(LoginDTO loginDTO) {
 		for(User u:users) {
