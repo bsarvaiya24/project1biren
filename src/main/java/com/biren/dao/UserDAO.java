@@ -3,6 +3,8 @@ package com.biren.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Session;
+
 import com.biren.dto.LoginDTO;
 import com.biren.model.User;
 
@@ -17,10 +19,17 @@ public class UserDAO {
 	}
 	
 	{
-		users.add(new User(1, "admin", "password"));
+//		users.add(new User(1, "admin", "password"));
+	}
+	
+	public void getUsers(Session session){
+		
+		this.users = (List<User>) session.createQuery("FROM User u").getResultList();
+		
 	}
 
-	public User getUserByUsernameAndPassword(LoginDTO loginDTO) {
+	public User getUserByUsernameAndPassword(LoginDTO loginDTO, Session session) {
+		this.getUsers(session);
 		for(User u:users) {
 			if(loginDTO.getUsername().equals(u.getUsername()) && loginDTO.getPassword().equals(u.getPassword())) {
 				return u;
