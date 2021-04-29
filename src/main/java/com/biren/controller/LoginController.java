@@ -3,12 +3,14 @@ package com.biren.controller;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import org.hibernate.Session;
 
 import com.biren.dto.LoginDTO;
 import com.biren.dto.MessageDTO;
 import com.biren.exception.StaticFileNotFoundException;
+import com.biren.model.Reimbursement;
 import com.biren.model.User;
 import com.biren.service.LoginService;
 import com.biren.utils.SessionUtility;
@@ -19,18 +21,19 @@ import io.javalin.http.Handler;
 public class LoginController implements Controller {
 	
 	private LoginService loginService;
-	
+	Session session = null;
 
 	public LoginController() {
 		this.loginService = new LoginService();
 	}
 	
 	private Handler loginHandler = (ctx) -> {
-		Session session = SessionUtility.getSession();
+		session = SessionUtility.getSession();
 		LoginDTO loginDTO = ctx.bodyAsClass(LoginDTO.class);
 		User user = loginService.login(loginDTO,session);
 		System.out.println(user);
 		ctx.sessionAttribute("currentlyLoggedInUser", user);
+		ctx.json(user);
 		ctx.status(200);
 	};
 	
@@ -92,35 +95,26 @@ public class LoginController implements Controller {
 		String html = new String(ourFileInBytes);
 		return html;
 	}
-	
-	private Handler getDashSubmitter(String classpathPath) {
-		return ctx -> {
-			InputStream is = LoginController.class.getResourceAsStream(classpathPath);
-			
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			int read;
-			byte[] buffer = new byte[1024];
-			
-			while((read = is.read(buffer, 0, buffer.length)) != -1) {
-				baos.write(buffer, 0, read);
-			}
-			
-			byte[] ourFileInBytes = baos.toByteArray();
-			
-			String html = new String(ourFileInBytes);
-			ctx.html(html);
-			ctx.status(200);
-		};
-	}
+
+	private Handler populateDataByUserId = (ctx) -> {
+		User user = (User) ctx.sessionAttribute("currentlyLoggedInUser");
+		if (user == null) {
+			MessageDTO messageDTO = new MessageDTO();
+			messageDTO.setMessage("User is not currently logged in!");
+			ctx.json(messageDTO);
+			ctx.status(400);
+		} else {
+			List<Reimbursement> userReimbursement = loginService.getReimbursementByUser(user,session);
+		}
+	};
 
 	@Override
 	public void mapEndpoints(Javalin app) {
 		app.post("/login", loginHandler);
-		app.get("/", getLoginHandler("/static/index_login.html"));
 		app.get("/login", getLoginHandler("/static/index_login.html"));
 		app.get("/current_user", currentUserHandler);
 		app.post("/logout", logoutHandler);
-		app.get("/dashboard_submitter", getDashSubmitter("/static/dash_submitter.html"));
+		app.post("/populatedata", populateDataByUserId);
 	}
 
 }

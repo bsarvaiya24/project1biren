@@ -1,5 +1,6 @@
 window.onload = function() {
     renderCurrentUser();
+    renderUserTransactions();
 }
 
 function renderCurrentUser() {
@@ -13,11 +14,20 @@ function renderCurrentUser() {
 
         return response.json();
     }).then((data) => {
+        //  Change Dashboard Title
         let firstName = data.firstName;
         let lastName = data.lastName;
 
         let userInfoElement = document.querySelector('#dash_title');
         let oldHtml = userInfoElement.innerHTML;
         userInfoElement.innerHTML = ` ${oldHtml} for ${firstName} ${lastName}`
+
+        //Change Table data
+
+        //Select Table
     })
+}
+
+function renderUserTransactions() {
+    
 }
