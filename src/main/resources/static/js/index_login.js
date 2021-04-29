@@ -1,6 +1,7 @@
 document.querySelector('#login').addEventListener('click', login);
 
-function login() {
+function login(evt) {
+    evt.preventDefault();
     let un = document.querySelector('#username').value;
     let pw = document.querySelector('#password').value;
 
@@ -17,6 +18,7 @@ function login() {
         },
         body: JSON.stringify(data)
     }).then((response) => {
+        alert("reached here");
         if (response.status === 200) {
             // console.log(response);
             // alert(response.json);

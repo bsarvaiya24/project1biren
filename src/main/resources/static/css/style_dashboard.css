@@ -32,6 +32,14 @@ main{
     display:block !important;
 }
 
+#blue-card-header{
+    background-color: #04508f;
+}
+
+#grey-card-header{
+    background-color: #44494e;
+}
+
 @media (min-width:992px) {
     body{
         overflow: auto !important;
