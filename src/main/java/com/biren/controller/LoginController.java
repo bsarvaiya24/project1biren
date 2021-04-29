@@ -29,6 +29,7 @@ public class LoginController implements Controller {
 	
 	private Handler loginHandler = (ctx) -> {
 		session = SessionUtility.getSession();
+		SubmitterController.setSession(session);
 		LoginDTO loginDTO = ctx.bodyAsClass(LoginDTO.class);
 		User user = loginService.login(loginDTO,session);
 		System.out.println(user);
@@ -96,17 +97,7 @@ public class LoginController implements Controller {
 		return html;
 	}
 
-	private Handler populateDataByUserId = (ctx) -> {
-		User user = (User) ctx.sessionAttribute("currentlyLoggedInUser");
-		if (user == null) {
-			MessageDTO messageDTO = new MessageDTO();
-			messageDTO.setMessage("User is not currently logged in!");
-			ctx.json(messageDTO);
-			ctx.status(400);
-		} else {
-			List<Reimbursement> userReimbursement = loginService.getReimbursementByUser(user,session);
-		}
-	};
+
 
 	@Override
 	public void mapEndpoints(Javalin app) {
@@ -114,7 +105,7 @@ public class LoginController implements Controller {
 		app.get("/login", getLoginHandler("/static/index_login.html"));
 		app.get("/current_user", currentUserHandler);
 		app.post("/logout", logoutHandler);
-		app.post("/populatedata", populateDataByUserId);
+		
 	}
 
 }
