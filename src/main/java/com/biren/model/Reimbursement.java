@@ -1,5 +1,7 @@
 package com.biren.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,13 +23,13 @@ public class Reimbursement {
 	@Column(name = "reimb_amount", nullable = false)
 	private double reimbAmount;
 	
-	//TODO
-	@Column(name = "reimb_submitted", nullable = false)
-	private String reimbSubmitted;
 	
-	//TODO
+	@Column(name = "reimb_submitted", nullable = false)
+	private Date reimbSubmitted;
+	
+	
 	@Column(name = "reimb_resolved")
-	private String reimbResolved;
+	private Date reimbResolved;
 	
 	@Column(name = "reimb_description")
 	private String reimbDescription;
@@ -56,7 +58,7 @@ public class Reimbursement {
 		super();
 	}
 
-	public Reimbursement(double reimbAmount, String reimbSubmitted, User reimbAuthor, ReimbursementStatus reimbStatusId,
+	public Reimbursement(double reimbAmount, Date reimbSubmitted, User reimbAuthor, ReimbursementStatus reimbStatusId,
 			ReimbursementType reimbTypeId) {
 		super();
 		this.reimbAmount = reimbAmount;
@@ -82,19 +84,19 @@ public class Reimbursement {
 		this.reimbAmount = reimbAmount;
 	}
 
-	public String getReimbSubmitted() {
+	public Date getReimbSubmitted() {
 		return reimbSubmitted;
 	}
 
-	public void setReimbSubmitted(String reimbSubmitted) {
+	public void setReimbSubmitted(Date reimbSubmitted) {
 		this.reimbSubmitted = reimbSubmitted;
 	}
 
-	public String getReimbResolved() {
+	public Date getReimbResolved() {
 		return reimbResolved;
 	}
 
-	public void setReimbResolved(String reimbResolved) {
+	public void setReimbResolved(Date reimbResolved) {
 		this.reimbResolved = reimbResolved;
 	}
 

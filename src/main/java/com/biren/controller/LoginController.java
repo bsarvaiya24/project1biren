@@ -21,20 +21,18 @@ import io.javalin.http.Handler;
 public class LoginController implements Controller {
 	
 	private LoginService loginService;
-	Session session = null;
 
 	public LoginController() {
 		this.loginService = new LoginService();
 	}
 	
 	private Handler loginHandler = (ctx) -> {
-		session = SessionUtility.getSession();
-		SubmitterController.setSession(session);
 		LoginDTO loginDTO = ctx.bodyAsClass(LoginDTO.class);
-		User user = loginService.login(loginDTO,session);
+		System.out.println(loginDTO.getUsername()+" "+loginDTO.getPassword());
+		User user = loginService.login(loginDTO);
 		System.out.println(user);
 		ctx.sessionAttribute("currentlyLoggedInUser", user);
-		// ctx.json(user);
+		ctx.json(user);
 		ctx.status(200);
 	};
 	
@@ -59,6 +57,7 @@ public class LoginController implements Controller {
 	}
 	
 	private Handler currentUserHandler = (ctx) -> {
+//		System.out.println("Inside currentUserHandler");
 		User user = (User) ctx.sessionAttribute("currentlyLoggedInUser");
 		if (user == null) {
 			MessageDTO messageDTO = new MessageDTO();
@@ -75,36 +74,13 @@ public class LoginController implements Controller {
 		ctx.html("Logout successful");
 		ctx.status(200);
 	};
-	
-	private String classpathToString(String classpathPath) throws StaticFileNotFoundException {
-		InputStream is = LoginController.class.getResourceAsStream(classpathPath);
-		
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		int read;
-		byte[] buffer = new byte[1024];
-		
-		try {
-			while((read = is.read(buffer, 0, buffer.length)) != -1) {
-				baos.write(buffer, 0, read);
-			}
-		} catch (IOException e) {
-			throw new StaticFileNotFoundException("Something went wrong while trying to get the static file. Message: "+e.getMessage());
-		}
-		
-		byte[] ourFileInBytes = baos.toByteArray();
-		
-		String html = new String(ourFileInBytes);
-		return html;
-	}
-
-
 
 	@Override
 	public void mapEndpoints(Javalin app) {
 		app.post("/login", loginHandler);
 		app.get("/login", getLoginHandler("/static/index_login.html"));
 		app.get("/current_user", currentUserHandler);
-		app.post("/logout", logoutHandler);
+		app.get("/logout", logoutHandler);
 		
 	}
 

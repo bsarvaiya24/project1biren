@@ -18,15 +18,20 @@ function login(evt) {
         },
         body: JSON.stringify(data)
     }).then((response) => {
-        alert("reached here");
         if (response.status === 200) {
-            // console.log(response);
-            // alert(response.json);
-            // window.location.href = '/landing.html';
-            window.location.href = '/dash_submitter.html';
-            // window.location.href = response.redirect;
+            return response.json();
         } else if (response.status === 401) {
             displayInvalidLogin();
+        }
+        return response.json();
+    }).then((data) => {
+        console.log(data);
+        if(data.roleId.ersUserRoleId === 2){
+            window.location.href = '/dash_submitter.html';
+        } 
+        else {
+            window.location.href = '/index.html';
+        //     window.location.href = '/dash_approver.html';
         }
     })
 }
