@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.TypedQuery;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import com.biren.dto.LoginDTO;
 import com.biren.model.Reimbursement;
@@ -21,7 +22,8 @@ public class UserDAO {
 //	SessionUtility.getSessionFactory().openSession();
 	
 //	Session session = SessionUtility.getSession();
-	Session session = SessionUtility.getSession().openSession();
+//	Session session = SessionUtility.getSession().getCurrentSession();
+	Session session = null;
 	
 	
 	List<User> users = new ArrayList<>();
@@ -36,9 +38,10 @@ public class UserDAO {
 	}
 	
 	public void getUsers(){
-		
+		session = SessionUtility.getSession().getCurrentSession();
+		Transaction tx1 = session.beginTransaction();
 		this.users = (List<User>) session.createQuery("FROM User u").getResultList();
-		
+		tx1.commit();
 	}
 	
 //	public void getUsersById(User user,Session session){
@@ -58,10 +61,6 @@ public class UserDAO {
 		return null;
 	}
 
-	public List<Reimbursement> getReimbursementsByUser(User user) {
-		List<Reimbursement> userReimbursements = (List<Reimbursement>) session.createQuery("FROM Reimbursement r WHERE r.reimbAuthor = :user")
-				.setParameter("user", user).getResultList();
-		return userReimbursements;
-	}
+
 
 }

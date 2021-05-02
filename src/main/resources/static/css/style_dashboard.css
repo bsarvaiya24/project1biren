@@ -32,12 +32,16 @@ main{
     display:block !important;
 }
 
-#blue-card-header{
+#blue-card-header {
     background-color: #04508f;
 }
 
-#grey-card-header{
+#grey-card-header {
     background-color: #44494e;
+}
+
+#add-result-display {
+    display:none;
 }
 
 @media (min-width:992px) {

@@ -1,4 +1,5 @@
 document.querySelector('#login').addEventListener('click', login);
+// If user already logged in then move to dashboard [onload]
 
 function login(evt) {
     evt.preventDefault();
@@ -30,14 +31,14 @@ function login(evt) {
             window.location.href = '/dash_submitter.html';
         } 
         else {
-            window.location.href = '/index.html';
-        //     window.location.href = '/dash_approver.html';
+            // window.location.href = '/index.html';
+            window.location.href = '/dash_approver.html';
         }
     })
 }
 
 function displayInvalidLogin() {
-    let bodyElement = document.querySelector('error-div');
+    let bodyElement = document.querySelector('#error-div');
     bodyElement.innerHTML = '';
 
     let pElement = document.createElement('p');

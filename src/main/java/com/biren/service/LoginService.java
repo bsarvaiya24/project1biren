@@ -26,7 +26,6 @@ public class LoginService {
 	}
 	
 	public User login(LoginDTO loginDTO) throws BadParameterException, LoginException {
-		
 		if(loginDTO.getUsername().trim().equals("") || loginDTO.getPassword().trim().equals("")) {
 			throw new BadParameterException("Cannot have blank username and/or password");
 		}
@@ -34,20 +33,19 @@ public class LoginService {
 		if(user == null) {
 			throw new LoginException("User was not able to login with given username and password.");
 		}
-		
 		return user;
 	}
 
-	public List<Reimbursement> getReimbursementByUser(User user) throws LoginException, BadParameterException {
-		if(user.getUsername().trim().equals("") || user.getPassword().trim().equals("")) {
-			throw new BadParameterException("Cannot have blank username and/or password");
-		}
-		List<Reimbursement> returnedUserReimbursements = userDAO.getReimbursementsByUser(user);
-		if(returnedUserReimbursements == null) {
-			throw new LoginException("User was not able to login with given username and password.");
-		}
-		
-		return returnedUserReimbursements;
-	}
+//	public List<Reimbursement> getReimbursementByUser(User user) throws LoginException, BadParameterException {
+//		if(user.getUsername().trim().equals("") || user.getPassword().trim().equals("")) {
+//			throw new BadParameterException("Cannot have blank username and/or password");
+//		}
+//		List<Reimbursement> returnedUserReimbursements = userDAO.getReimbursementsByUser(user);
+//		if(returnedUserReimbursements == null) {
+//			throw new LoginException("User was not able to login with given username and password.");
+//		}
+//		
+//		return returnedUserReimbursements;
+//	}
 
 }

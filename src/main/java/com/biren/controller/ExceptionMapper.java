@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import com.biren.exception.BadParameterException;
 import com.biren.exception.LoginException;
+import com.biren.exception.ReimbursementsNotFoundException;
 
 import io.javalin.Javalin;
 import io.javalin.http.ExceptionHandler;
@@ -28,10 +29,16 @@ public class ExceptionMapper implements Controller {
 		ctx.status(401);
 	};
 	
+	private ExceptionHandler<ReimbursementsNotFoundException> reimbursementsNotFoundException = (e,ctx) -> {
+		logger.warn(e.getMessage());
+		ctx.status(404);
+	};
+	
 	@Override
 	public void mapEndpoints(Javalin app) {
 		app.exception(BadParameterException.class, badParameterException);
 		app.exception(LoginException.class, loginException);
+		app.exception(ReimbursementsNotFoundException.class, reimbursementsNotFoundException);
 		
 	}
 

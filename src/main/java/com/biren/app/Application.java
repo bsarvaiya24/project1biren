@@ -30,7 +30,7 @@ public class Application {
 	
 	public static void main(String[] args) {
 		
-//		Session session = SessionUtility.getSession();
+//		Session session = SessionUtility.getSession().openSession();
 //		
 //		Transaction tx1 = session.beginTransaction();
 //		

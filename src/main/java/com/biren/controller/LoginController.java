@@ -9,6 +9,7 @@ import org.hibernate.Session;
 
 import com.biren.dto.LoginDTO;
 import com.biren.dto.MessageDTO;
+import com.biren.exception.BadParameterException;
 import com.biren.exception.StaticFileNotFoundException;
 import com.biren.model.Reimbursement;
 import com.biren.model.User;
@@ -27,35 +28,19 @@ public class LoginController implements Controller {
 	}
 	
 	private Handler loginHandler = (ctx) -> {
-		LoginDTO loginDTO = ctx.bodyAsClass(LoginDTO.class);
-		System.out.println(loginDTO.getUsername()+" "+loginDTO.getPassword());
+		LoginDTO loginDTO = null;
+		try {
+			loginDTO = ctx.bodyAsClass(LoginDTO.class);
+		} catch (NullPointerException e1) {
+			throw new BadParameterException("Received Null values for parameter(s). Message: "+e1.getMessage());
+		}
 		User user = loginService.login(loginDTO);
-		System.out.println(user);
 		ctx.sessionAttribute("currentlyLoggedInUser", user);
+		//TODO: return UserDTO
 		ctx.json(user);
 		ctx.status(200);
 	};
-	
-	private Handler getLoginHandler(String classpathPath) {
-		return ctx -> {
-			InputStream is = LoginController.class.getResourceAsStream(classpathPath);
-			
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			int read;
-			byte[] buffer = new byte[1024];
-			
-			while((read = is.read(buffer, 0, buffer.length)) != -1) {
-				baos.write(buffer, 0, read);
-			}
-			
-			byte[] ourFileInBytes = baos.toByteArray();
-			
-			String html = new String(ourFileInBytes);
-			ctx.html(html);
-			ctx.status(200);
-		};
-	}
-	
+
 	private Handler currentUserHandler = (ctx) -> {
 //		System.out.println("Inside currentUserHandler");
 		User user = (User) ctx.sessionAttribute("currentlyLoggedInUser");
@@ -65,6 +50,7 @@ public class LoginController implements Controller {
 			ctx.json(messageDTO);
 			ctx.status(400);
 		} else {
+			//TODO: return UserDTO
 			ctx.json(user);
 		}
 	};
@@ -78,10 +64,30 @@ public class LoginController implements Controller {
 	@Override
 	public void mapEndpoints(Javalin app) {
 		app.post("/login", loginHandler);
-		app.get("/login", getLoginHandler("/static/index_login.html"));
+		//app.get("/login", getLoginHandler("/static/index_login.html"));
 		app.get("/current_user", currentUserHandler);
 		app.get("/logout", logoutHandler);
 		
 	}
+	
+//	private Handler getLoginHandler(String classpathPath) {
+//	return ctx -> {
+//		InputStream is = LoginController.class.getResourceAsStream(classpathPath);
+//		
+//		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//		int read;
+//		byte[] buffer = new byte[1024];
+//		
+//		while((read = is.read(buffer, 0, buffer.length)) != -1) {
+//			baos.write(buffer, 0, read);
+//		}
+//		
+//		byte[] ourFileInBytes = baos.toByteArray();
+//		
+//		String html = new String(ourFileInBytes);
+//		ctx.html(html);
+//		ctx.status(200);
+//	};
+//}
 
 }

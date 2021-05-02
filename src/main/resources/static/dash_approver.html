@@ -28,7 +28,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button> -->
             <!-- collapse navbar-collapse -->
-            <div class=" ms-auto" id="navbarSupportedContent">
+            <div class="ms-auto" id="navbarSupportedContent">
                 <!-- <span class=""></span> -->
                 <ul class="navbar-nav mb-2 mb-lg-0 my-3">
                     <li class="nav-item dropdown">
@@ -94,7 +94,7 @@
                                         <span class="me-2">
                                             <i class="bi bi-plus-circle"></i>
                                         </span>
-                                        <span>Add Ticket</span>
+                                        <span>View Pending Tickets</span>
                                     </a>
                                 </li>
                                 <li id="offcanvas-view-link">
@@ -102,7 +102,7 @@
                                         <span class="me-2">
                                             <i class="bi bi-stack"></i>
                                         </span>
-                                        <span>View Tickets</span>
+                                        <span>View All Tickets</span>
                                     </a>
                                 </li>
                             </ul>
@@ -122,45 +122,43 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-3 mb-3">
-                <div id="blue-card-link" class="card text-white bg-primary h-100">
-                    <!-- <a id="blue-card-link" href="#"> -->
-                    <div id="blue-card-header" class="card-header text-center">Add</div>
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Add New Expense</h5>
-                        <p class="card-text">Click here to start a new ticket for expense reimbursement.</p>
-                    </div>
-                    <!-- </a> -->
-                </div>
-            </div>
-            <div class="col-md-3 mb-3">
-                <div class="card text-white bg-secondary h-100">
-                    <div id="grey-card-header" class="card-header text-center">Add</div>
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Upload Receipt</h5>
-                        <p class="card-text">Click here to upload a receipt document and start a new ticket for expense
-                            reimbursement.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12 mt-5">
-                <div class="card-header">
-                    Last 10 Reimbursement Tickets
+            <div class="col-md-12 mt-3">
+                <div class="card-header p-2 border">
+                    <span class="fs-4">
+                        Last 10 Reimbursement Tickets
+                    </span>
                 </div>
                 <div class="card-body">
+                    <div class="row">
+                        <div class="dropdown d-flex">
+                            <!-- <span class="mt-2 ms-auto">Filter by : </span> -->
+                            <button class="btn btn-secondary dropdown-toggle ms-auto" type="button" id="dropdownFilterMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                                Filter by
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownFilterMenu">
+                                <li><a id="filter-all" class="dropdown-item" href="#">All</a></li>
+                                <li><a id="filter-submitted" class="dropdown-item" href="#">Submitted</a></li>
+                                <li><a id="filter-pending" class="dropdown-item" href="#">Pending</a></li>
+                                <li><a id="filter-approved" class="dropdown-item" href="#">Approved</a></li>
+                                <li><a id="filter-paid" class="dropdown-item" href="#">Paid</a></li>
+                                <li><a id="filter-denied" class="dropdown-item" href="#">Denied</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
                     <div class="table-responsive">
                         <table id="dashboard_table" class="table table-striped data-table" style="width: 100%">
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Amount</th>
                                     <th>Submit Date</th>
+                                    <th>Author</th>
+                                    <th>Amount</th>
+                                    <th>Type</th>
+                                    <th>Actions</th>
                                     <th>Resolved On</th>
                                     <th>Resolver</th>
                                     <th>Status</th>
-                                    <th>Type</th>
                                 </tr>
                             </thead>
                             <tbody id="dashboard_table_body">
@@ -258,12 +256,14 @@
                             <tfoot>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Amount</th>
                                     <th>Submit Date</th>
+                                    <th>Author</th>
+                                    <th>Amount</th>
+                                    <th>Type</th>
+                                    <th>Actions</th>
                                     <th>Resolved On</th>
                                     <th>Resolver</th>
                                     <th>Status</th>
-                                    <th>Type</th>
                                 </tr>
                             </tfoot>
                         </table>
@@ -305,14 +305,9 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <div>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                        <button type="button" class="btn btn-success" onclick="submitAddTicket()">Submit</button>
-                    </div>
-                    <div id="add-result-display" class="col-lg-6">
-                        <!-- Error Message -->
-                    </div>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <!-- <button type="button" class="btn btn-primary disabled">Save changes</button> -->
+                    <button type="button" id="add_ticket_submit" class="btn btn-success">Submit</button>
                 </div>
             </div>
     
@@ -324,7 +319,7 @@
     <script src="assets/js/jquery-3.3.1.min.js"></script>
     <script src="assets/js/jquery.dataTables.min.js"></script>
     <script src="assets/js/dataTables.bootstrap5.min.js"></script>
-    <script src="js/dash_script.js"></script>
+    <script src="js/dash_script_approver.js"></script>
 </body>
 
 </html>
