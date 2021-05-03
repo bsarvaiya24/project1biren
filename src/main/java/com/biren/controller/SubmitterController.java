@@ -1,8 +1,8 @@
 package com.biren.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
-
-import org.hibernate.Session;
 
 import com.biren.dto.MessageDTO;
 import com.biren.dto.ReimbursementDTO;
@@ -67,9 +67,71 @@ public class SubmitterController implements Controller {
 			ctx.json(messageDTO);
 			ctx.status(400);
 		} else {
-			List<ReimbursementDTO> allReimbursementDTO = submitterService.latestApproverData();
-			ctx.json(allReimbursementDTO);
-			ctx.status(200);
+			boolean allowedUser = submitterService.checkIfUserIsApprover(user);
+			if(allowedUser) {
+				List<ReimbursementDTO> allReimbursementDTO = submitterService.latestApproverData();
+				ctx.json(allReimbursementDTO);
+				ctx.status(200);
+			} else {
+				MessageDTO messageDTO = new MessageDTO();
+				messageDTO.setMessage("User is not allowed to access this URL!");
+				ctx.json(messageDTO);
+				ctx.status(403);
+			}
+		}
+	};
+	
+	private Handler approveReimbursement = (ctx) -> {
+		User user = (User) ctx.sessionAttribute("currentlyLoggedInUser");
+		if (user == null) {
+			MessageDTO messageDTO = new MessageDTO();
+			messageDTO.setMessage("User is not currently logged in!");
+			ctx.json(messageDTO);
+			ctx.status(400);
+		} else {
+			boolean allowedUser = submitterService.checkIfUserIsApprover(user);
+			if(allowedUser) {
+				ReimbursementDTO reimbursementDTO = null;
+				try {
+					reimbursementDTO = ctx.bodyAsClass(ReimbursementDTO.class);
+					reimbursementDTO.setReimbResolver(user);
+					Date date = new Date();
+					System.out.println(date);
+					reimbursementDTO.setReimbResolved(date);
+				} catch (NullPointerException e1) {
+					throw new BadParameterException("Null values received for parameter(s). Message: "+e1.getMessage());
+				}
+				submitterService.approveReimbursement(reimbursementDTO);
+				ctx.status(200);
+			} else {
+				MessageDTO messageDTO = new MessageDTO();
+				messageDTO.setMessage("User is not allowed to access this URL!");
+				ctx.json(messageDTO);
+				ctx.status(403);
+			}
+		}
+	};
+	
+	private Handler checkForApprover = (ctx) -> {
+		User user = (User) ctx.sessionAttribute("currentlyLoggedInUser");
+		if (user == null) {
+			MessageDTO messageDTO = new MessageDTO();
+			messageDTO.setMessage("User is not currently logged in!");
+			ctx.json(messageDTO);
+			ctx.status(400);
+		} else {
+			boolean allowedUser = submitterService.checkIfUserIsApprover(user);
+			if(allowedUser) {
+				MessageDTO messageDTO = new MessageDTO();
+				messageDTO.setMessage("true");
+				ctx.json(messageDTO);
+				ctx.status(200);
+			} else {
+				MessageDTO messageDTO = new MessageDTO();
+				messageDTO.setMessage("false");
+				ctx.json(messageDTO);
+				ctx.status(403);
+			}
 		}
 	};
 	
@@ -77,7 +139,12 @@ public class SubmitterController implements Controller {
 	public void mapEndpoints(Javalin app) {
 		app.get("/populate_data", populateDataByUserId);
 		app.post("/add_reimbursement", addReimbursement);
+		
+		app.get("/check_for_approver", checkForApprover);
+		
+		// Approver only URLs
 		app.get("/latest_approver_data", latestApproverData);
+		app.post("/approve_reimbursement", approveReimbursement);
 	}
 
 }

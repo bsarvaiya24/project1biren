@@ -8,11 +8,23 @@ document.querySelector("#filter-paid").addEventListener('click', filterPaid);
 document.querySelector("#filter-denied").addEventListener('click', filterDenied);
 
 window.onload = function() {
+    checkForApprover();
     renderCurrentUser();
     renderLastReimbursementData();
 }
 
 let reimbursementData;
+
+function checkForApprover() {
+    fetch('http://localhost:7000/check_for_approver', {
+        method: 'GET',
+        credentials: 'include'
+    }).then((response) => {
+        if (response.status === 403 || response.status === 400) {
+            window.location.href = '/';
+        }
+    })
+}
 
 function renderCurrentUser() {
     fetch('http://localhost:7000/current_user', {
@@ -103,7 +115,7 @@ function populateDashboardTable(data){
         tr.appendChild(td1);
 
         td2 = document.createElement("td");
-        tdText2 = document.createTextNode(data[i].reimbSubmitted);
+        tdText2 = document.createTextNode(data[i].reimbSubmittedString);
         td2.appendChild(tdText2);
         tr.appendChild(td2);
 
@@ -122,71 +134,86 @@ function populateDashboardTable(data){
         td5.appendChild(tdText5);
         tr.appendChild(td5);
 
-        td6 = document.createElement("td");
-        tdActionDiv = document.createElement("div");
-        tdActionDiv.classList.add("dropdown");
+        // ACTIONS DROPDOWN MENU
+        if(data[i].reimbStatusId.reimbStatusId < 3){
+            td6 = document.createElement("td");
+            tdActionDiv = document.createElement("div");
+            tdActionDiv.classList.add("dropdown");
 
-        tdActionBtn = document.createElement("button");
-        tdActionBtn.classList.add("btn");
-        tdActionBtn.classList.add("btn-secondary");
-        tdActionBtn.classList.add("dropdown-toggle");
-        tdActionBtn.type = "button";
-        tdActionBtn.setAttribute("data-bs-toggle", "dropdown");
-        tdActionBtn.setAttribute("id", "dropdownAction"+i);
-        tdActionBtn.setAttribute("aria-expanded", "false");
-        tdActionDiv.appendChild(tdActionBtn);
+            tdActionBtn = document.createElement("button");
+            tdActionBtn.classList.add("btn");
+            tdActionBtn.classList.add("btn-primary");
+            // tdActionBtn.classList.add("dropdown-toggle");
+            tdActionBtn.type = "button";
+            tdActionBtn.setAttribute("data-bs-toggle", "dropdown");
+            tdActionBtn.setAttribute("id", "dropdownAction"+i);
+            tdActionBtn.setAttribute("aria-expanded", "false");
+            // <i class="bi bi-journal-check"></i>
+            tdActionBtnSymbol = document.createElement("i");
+            tdActionBtnSymbol.classList.add("bi");
+            tdActionBtnSymbol.classList.add("bi-journal-check");
+            tdActionBtn.appendChild(tdActionBtnSymbol);
+            tdActionDiv.appendChild(tdActionBtn);
 
-        tdActionUl = document.createElement("ul");
-        tdActionUl.classList.add("dropdown-menu");
-        tdActionUl.setAttribute("aria-labelledby", "dropdownAction"+i);
+            tdActionUl = document.createElement("ul");
+            tdActionUl.classList.add("dropdown-menu");
+            tdActionUl.setAttribute("aria-labelledby", "dropdownAction"+i);
 
-        tdActionLi1 = document.createElement("li");
-        tdActionA1 = document.createElement("a");
-        tdActionA1.classList.add("dropdown-item");
-        //TODO: add ID for event listener, or OnClick to perform action
-        tdActionA1Text = document.createTextNode("Pending");
-        tdActionA1.appendChild(tdActionA1Text);
-        tdActionA1.classList.add("disabled");
-        tdActionLi1.appendChild(tdActionA1);
-        tdActionUl.appendChild(tdActionLi1);
+            tdActionLi1 = document.createElement("li");
+            tdActionA1 = document.createElement("a");
+            tdActionA1.classList.add("dropdown-item");
+            //TODO: add ID for event listener, or OnClick to perform action
+            tdActionA1Text = document.createTextNode("Pending");
+            tdActionA1.appendChild(tdActionA1Text);
+            tdActionA1.classList.add("disabled");
+            tdActionLi1.appendChild(tdActionA1);
+            tdActionUl.appendChild(tdActionLi1);
 
-        tdActionLi2 = document.createElement("li");
-        tdActionA2 = document.createElement("a");
-        tdActionA2.classList.add("dropdown-item");
-        //TODO: add ID for event listener, or OnClick to perform action
-        tdActionA2Text = document.createTextNode("Approved");
-        tdActionA2.appendChild(tdActionA2Text);
-        tdActionLi2.appendChild(tdActionA2);
-        tdActionUl.appendChild(tdActionLi2);
+            tdActionLi2 = document.createElement("li");
+            tdActionLi2.addEventListener("click", showApprovedModal);
+            tdActionA2 = document.createElement("a");
+            tdActionA2.id = "a_approve_"+data[i].reimbId;
+            tdActionA2.classList.add("dropdown-item");
+            tdActionA2Text = document.createTextNode("Approve");
+            tdActionA2.appendChild(tdActionA2Text);
+            tdActionLi2.appendChild(tdActionA2);
+            tdActionUl.appendChild(tdActionLi2);
 
-        tdActionLi3 = document.createElement("li");
-        tdActionA3 = document.createElement("a");
-        tdActionA3.classList.add("dropdown-item");
-        //TODO: add ID for event listener, or OnClick to perform action
-        tdActionA3Text = document.createTextNode("Paid");
-        tdActionA3.appendChild(tdActionA3Text);
-        tdActionA3.classList.add("disabled");
-        tdActionLi3.appendChild(tdActionA3);
-        tdActionUl.appendChild(tdActionLi3);
+            tdActionLi3 = document.createElement("li");
+            tdActionA3 = document.createElement("a");
+            tdActionA3.classList.add("dropdown-item");
+            //TODO: add ID for event listener, or OnClick to perform action
+            tdActionA3Text = document.createTextNode("Pay");
+            tdActionA3.appendChild(tdActionA3Text);
+            tdActionA3.classList.add("disabled");
+            tdActionLi3.appendChild(tdActionA3);
+            tdActionUl.appendChild(tdActionLi3);
 
-        tdActionLi4 = document.createElement("li");
-        tdActionA4 = document.createElement("a");
-        tdActionA4.classList.add("dropdown-item");
-        //TODO: add ID for event listener, or OnClick to perform action
-        tdActionA4Text = document.createTextNode("Denied");
-        tdActionA4.appendChild(tdActionA4Text);
-        tdActionLi4.appendChild(tdActionA4);
-        tdActionUl.appendChild(tdActionLi4);
+            tdActionLi4 = document.createElement("li");
+            tdActionA4 = document.createElement("a");
+            tdActionA4.classList.add("dropdown-item");
+            //TODO: add ID for event listener, or OnClick to perform action
+            tdActionA4Text = document.createTextNode("Deny");
+            tdActionA4.appendChild(tdActionA4Text);
+            tdActionLi4.appendChild(tdActionA4);
+            tdActionUl.appendChild(tdActionLi4);
 
-        tdActionDiv.appendChild(tdActionUl);
-        td6.appendChild(tdActionDiv);
-        tr.appendChild(td6);
+            tdActionDiv.appendChild(tdActionUl);
+            td6.appendChild(tdActionDiv);
+            tr.appendChild(td6);
+        } else {
+            td6 = document.createElement("td");
+            tr.appendChild(td6);
+        }
+        
+        // ACTIONS DROPDOWN MENU
+
 
         td7 = document.createElement("td");
-        if(data[i].reimbResolved===null){
+        if(data[i].reimbResolvedString===null){
             tdText7 = document.createTextNode("----/--/--");
         } else {
-            tdText7 = document.createTextNode(data[i].reimbResolved);
+            tdText7 = document.createTextNode(data[i].reimbResolvedString);
         }
         td7.appendChild(tdText7);
         tr.appendChild(td7);
@@ -203,6 +230,15 @@ function populateDashboardTable(data){
         td9 = document.createElement("td");
         tdText9 = document.createTextNode(data[i].reimbStatusId.reimbStatus);
         td9.appendChild(tdText9);
+        if(data[i].reimbStatusId.reimbStatusId==4){
+            td9.style.color = "green";
+        } else if(data[i].reimbStatusId.reimbStatusId==5){
+            td9.style.color = "red";
+        } else if(data[i].reimbStatusId.reimbStatusId==3){
+            td9.style.color = "blue";
+        } else {
+            td9.style.backgroundColor = "lightgoldenrodyellow";
+        }
         tr.appendChild(td9);
 
         tBody.appendChild(tr);
@@ -223,8 +259,63 @@ function modalTicketForm() {
     divElement.style.display="none";
 }
 
+function showApprovedModal(e) {
+    let currentReimbursementId = (e.target.attributes.id.value).split('_')[2];
+
+    $('#modal_approve').modal('show');
+    let currentReimbursement = reimbursementData.filter(r => { return r.reimbId == currentReimbursementId })[0];
+    // let currentReimbursement = currentReimbursementList[0];
+
+    let modalApproveId = document.querySelector("#approve_id");
+    modalApproveId.value = currentReimbursement.reimbId;
+
+    let modalApproveAuthor = document.querySelector("#approve_author");
+    modalApproveAuthor.value = (currentReimbursement.reimbAuthor.firstName)+" "+(currentReimbursement.reimbAuthor.lastName);
+
+    let modalApproveAmount = document.querySelector("#approve_amount");
+    modalApproveAmount.value = currentReimbursement.reimbAmount;
+
+    let modalApproveType = document.querySelector("#approve_type");
+    modalApproveType.value = currentReimbursement.reimbTypeId.reimbType;
+
+}
+
+function ApproveReimbursement() {
+    let reimbursementId = document.querySelector('#approve_id').value;
+
+    let data = {
+        reimbId: reimbursementId,
+    };
+
+    fetch('http://localhost:7000/approve_reimbursement', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    }).then((response) => {
+        if (response.status === 400) {
+            displayBadParameterFail();
+        } else if (response.status === 404){
+            displayRetrieveFail();
+        }
+        // return response.json();
+    }).then(() => {
+        let divElement = document.querySelector('#approve-result-display');
+        divElement.style.display="block";
+        divElement.innerHTML = '';
+
+        let pElement = document.createElement('p');
+        pElement.style.color = 'green';
+        pElement.innerHTML = 'Reimbursement successfully approved.';
+
+        divElement.appendChild(pElement);
+    })
+}
+
 function displayBadParameterFail() {
-    let divElement = document.querySelector('#add-result-display');
+    let divElement = document.querySelector('#approve-result-display');
     divElement.style.display="block";
     divElement.innerHTML = '';
 
@@ -236,7 +327,7 @@ function displayBadParameterFail() {
 }
 
 function displayRetrieveFail() {
-    let divElement = document.querySelector('#add-result-display');
+    let divElement = document.querySelector('#approve-result-display');
     divElement.style.display="block";
     divElement.innerHTML = '';
 

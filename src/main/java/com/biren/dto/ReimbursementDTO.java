@@ -12,8 +12,8 @@ public class ReimbursementDTO {
 	
 	private int reimbId;
 	private double reimbAmount;
-	private String reimbSubmitted;
-	private String reimbResolved;
+	private Date reimbSubmitted;
+	private Date reimbResolved;
 	private String reimbDescription;
 	private String reimbReceipt;
 	private User reimbAuthor;
@@ -22,11 +22,19 @@ public class ReimbursementDTO {
 	private ReimbursementType reimbTypeId;
 	private int reimbStatusIdInt;
 	private String reimbTypeIdString;
+	private String reimbSubmittedString;
+	private String reimbResolvedString;
 	
 	SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
 
 	public ReimbursementDTO() {
 		super();
+	}
+	
+	// Approve Reimbursement
+	public ReimbursementDTO(int reimbId) {
+		super();
+		this.reimbId = reimbId;
 	}
 
 	public ReimbursementDTO(int reimbId, double reimbAmount, Date reimbSubmitted, User reimbAuthor,
@@ -34,17 +42,17 @@ public class ReimbursementDTO {
 		super();
 		this.reimbId = reimbId;
 		this.reimbAmount = reimbAmount;
-		this.reimbSubmitted = formatter.format(reimbSubmitted);
+		this.reimbSubmittedString = formatter.format(reimbSubmitted);
 		this.reimbAuthor = reimbAuthor;
 		this.reimbStatusId = reimbStatusId;
 		this.reimbTypeId = reimbTypeId;
 	}
 	
 	// /add_reimbursement Controller
-	public ReimbursementDTO(double reimbAmount, String reimbSubmitted, int reimbStatusId, String reimbTypeId) {
+	public ReimbursementDTO(double reimbAmount, String reimbSubmittedString, int reimbStatusId, String reimbTypeId) {
 		super();
 		this.reimbAmount = reimbAmount;
-		this.reimbSubmitted = reimbSubmitted;
+		this.reimbSubmittedString = reimbSubmittedString;
 		this.reimbStatusIdInt = reimbStatusId;
 		this.reimbTypeIdString = reimbTypeId;
 	}
@@ -53,7 +61,7 @@ public class ReimbursementDTO {
 			ReimbursementStatus reimbStatusId, ReimbursementType reimbTypeId) {
 		super();
 		this.reimbAmount = reimbAmount;
-		this.reimbSubmitted = reimbSubmitted;
+		this.reimbSubmittedString = reimbSubmitted;
 		this.reimbAuthor = reimbAuthor;
 		this.reimbStatusId = reimbStatusId;
 		this.reimbTypeId = reimbTypeId;
@@ -64,7 +72,7 @@ public class ReimbursementDTO {
 		super();
 		this.reimbId = reimbId;
 		this.reimbAmount = reimbAmount;
-		this.reimbSubmitted = reimbSubmitted;
+		this.reimbSubmittedString = reimbSubmitted;
 		this.reimbAuthor = reimbAuthor;
 		this.reimbStatusId = reimbStatusId;
 		this.reimbTypeId = reimbTypeId;
@@ -75,13 +83,13 @@ public class ReimbursementDTO {
 	public ReimbursementDTO(Reimbursement r) {
 		this.reimbId = r.getReimbId();
 		this.reimbAmount = r.getReimbAmount();
-		this.reimbSubmitted = formatter.format(r.getReimbSubmitted());
+		this.reimbSubmittedString = formatter.format(r.getReimbSubmitted());
 		//Null
 		try {
-			this.reimbResolved = formatter.format(r.getReimbResolved());
+			this.reimbResolvedString = formatter.format(r.getReimbResolved());
 		} catch (NullPointerException e1) {
 			// TODO: Log NullPointerException
-			this.reimbResolved = null;
+			this.reimbResolvedString = null;
 		}
 		//TODO: Turn to UserDTO
 		this.reimbAuthor = r.getReimbAuthor();
@@ -105,22 +113,6 @@ public class ReimbursementDTO {
 
 	public void setReimbAmount(double reimbAmount) {
 		this.reimbAmount = reimbAmount;
-	}
-
-	public String getReimbSubmitted() {
-		return reimbSubmitted;
-	}
-
-	public void setReimbSubmitted(String reimbSubmitted) {
-		this.reimbSubmitted = reimbSubmitted;
-	}
-
-	public String getReimbResolved() {
-		return reimbResolved;
-	}
-
-	public void setReimbResolved(String reimbResolved) {
-		this.reimbResolved = reimbResolved;
 	}
 
 	public String getReimbDescription() {
@@ -195,6 +187,38 @@ public class ReimbursementDTO {
 		this.reimbTypeIdString = reimbTypeIdString;
 	}
 
+	public Date getReimbSubmitted() {
+		return reimbSubmitted;
+	}
+
+	public void setReimbSubmitted(Date reimbSubmitted) {
+		this.reimbSubmitted = reimbSubmitted;
+	}
+
+	public Date getReimbResolved() {
+		return reimbResolved;
+	}
+
+	public void setReimbResolved(Date reimbResolved) {
+		this.reimbResolved = reimbResolved;
+	}
+
+	public String getReimbSubmittedString() {
+		return reimbSubmittedString;
+	}
+
+	public void setReimbSubmittedString(String reimbSubmittedString) {
+		this.reimbSubmittedString = reimbSubmittedString;
+	}
+
+	public String getReimbResolvedString() {
+		return reimbResolvedString;
+	}
+
+	public void setReimbResolvedString(String reimbResolvedString) {
+		this.reimbResolvedString = reimbResolvedString;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -207,10 +231,12 @@ public class ReimbursementDTO {
 		result = prime * result + reimbId;
 		result = prime * result + ((reimbReceipt == null) ? 0 : reimbReceipt.hashCode());
 		result = prime * result + ((reimbResolved == null) ? 0 : reimbResolved.hashCode());
+		result = prime * result + ((reimbResolvedString == null) ? 0 : reimbResolvedString.hashCode());
 		result = prime * result + ((reimbResolver == null) ? 0 : reimbResolver.hashCode());
 		result = prime * result + ((reimbStatusId == null) ? 0 : reimbStatusId.hashCode());
 		result = prime * result + reimbStatusIdInt;
 		result = prime * result + ((reimbSubmitted == null) ? 0 : reimbSubmitted.hashCode());
+		result = prime * result + ((reimbSubmittedString == null) ? 0 : reimbSubmittedString.hashCode());
 		result = prime * result + ((reimbTypeId == null) ? 0 : reimbTypeId.hashCode());
 		result = prime * result + ((reimbTypeIdString == null) ? 0 : reimbTypeIdString.hashCode());
 		return result;
@@ -249,6 +275,11 @@ public class ReimbursementDTO {
 				return false;
 		} else if (!reimbResolved.equals(other.reimbResolved))
 			return false;
+		if (reimbResolvedString == null) {
+			if (other.reimbResolvedString != null)
+				return false;
+		} else if (!reimbResolvedString.equals(other.reimbResolvedString))
+			return false;
 		if (reimbResolver == null) {
 			if (other.reimbResolver != null)
 				return false;
@@ -265,6 +296,11 @@ public class ReimbursementDTO {
 			if (other.reimbSubmitted != null)
 				return false;
 		} else if (!reimbSubmitted.equals(other.reimbSubmitted))
+			return false;
+		if (reimbSubmittedString == null) {
+			if (other.reimbSubmittedString != null)
+				return false;
+		} else if (!reimbSubmittedString.equals(other.reimbSubmittedString))
 			return false;
 		if (reimbTypeId == null) {
 			if (other.reimbTypeId != null)
@@ -285,8 +321,8 @@ public class ReimbursementDTO {
 				+ reimbSubmitted + ", reimbResolved=" + reimbResolved + ", reimbDescription=" + reimbDescription
 				+ ", reimbReceipt=" + reimbReceipt + ", reimbAuthor=" + reimbAuthor + ", reimbResolver=" + reimbResolver
 				+ ", reimbStatusId=" + reimbStatusId + ", reimbTypeId=" + reimbTypeId + ", reimbStatusIdInt="
-				+ reimbStatusIdInt + ", reimbTypeIdString=" + reimbTypeIdString + "]";
+				+ reimbStatusIdInt + ", reimbTypeIdString=" + reimbTypeIdString + ", reimbSubmittedString="
+				+ reimbSubmittedString + ", reimbResolvedString=" + reimbResolvedString + "]";
 	}
-
-
+	
 }

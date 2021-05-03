@@ -132,8 +132,9 @@
                     <div class="row">
                         <div class="dropdown d-flex">
                             <!-- <span class="mt-2 ms-auto">Filter by : </span> -->
-                            <button class="btn btn-secondary dropdown-toggle ms-auto" type="button" id="dropdownFilterMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button class="btn btn-secondary ms-auto" type="button" id="dropdownFilterMenu" data-bs-toggle="dropdown" aria-expanded="false">
                                 Filter by
+                                <i class="bi bi-arrow-down-up"></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownFilterMenu">
                                 <li><a id="filter-all" class="dropdown-item" href="#">All</a></li>
@@ -171,87 +172,6 @@
                                     <td>Paid</td>
                                     <td>61</td>
                                 </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>$170,750</td>
-                                    <td>2011/07/25</td>
-                                    <td>2011/07/25</td>
-                                    <td>Tokyo</td>
-                                    <td>Paid</td>
-                                    <td>63</td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>$86,000</td>
-                                    <td>2009/01/12</td>
-                                    <td>2009/01/12</td>
-                                    <td>San Francisco</td>
-                                    <td>Paid</td>
-                                    <td>66</td>
-                                </tr>
-                                <tr>
-                                    <td>4</td>
-                                    <td>$433,060</td>
-                                    <td>2012/03/29</td>
-                                    <td>2012/03/29</td>
-                                    <td>Edinburgh</td>
-                                    <td>Paid</td>
-                                    <td>22</td>
-                                </tr>
-                                <tr>
-                                    <td>5</td>
-                                    <td>$162,700</td>
-                                    <td>2008/11/28</td>
-                                    <td>2008/11/28</td>
-                                    <td>Tokyo</td>
-                                    <td>Paid</td>
-                                    <td>33</td>
-                                </tr>
-                                <tr>
-                                    <td>6</td>
-                                    <td>$372,000</td>
-                                    <td>2012/12/02</td>
-                                    <td>2012/12/02</td>
-                                    <td>New York</td>
-                                    <td>Paid</td>
-                                    <td>61</td>
-                                </tr>
-                                <tr>
-                                    <td>7</td>
-                                    <td>$137,500</td>
-                                    <td>2012/08/06</td>
-                                    <td>2012/08/06</td>
-                                    <td>San Francisco</td>
-                                    <td>Paid</td>
-                                    <td>59</td>
-                                </tr>
-                                <tr>
-                                    <td>8</td>
-                                    <td>$327,900</td>
-                                    <td>2010/10/14</td>
-                                    <td>2010/10/14</td>
-                                    <td>Tokyo</td>
-                                    <td>Paid</td>
-                                    <td>55</td>
-                                </tr>
-                                <tr>
-                                    <td>9</td>
-                                    <td>$205,500</td>
-                                    <td>2009/09/15</td>
-                                    <td>2009/09/15</td>
-                                    <td>San Francisco</td>
-                                    <td>Paid</td>
-                                    <td>39</td>
-                                </tr>
-                                <tr>
-                                    <td>10</td>
-                                    <td>$103,600</td>
-                                    <td>2008/12/13</td>
-                                    <td>2008/12/13</td>
-                                    <td>Edinburgh</td>
-                                    <td>Paid</td>
-                                    <td>23</td>
-                                </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
@@ -275,39 +195,60 @@
     <!-- Main Dashboard -->
 
     <!-- Modal -->
-    <div class="modal fade" id="add_modal" role="dialog">
+    <div class="modal fade" id="modal_approve" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add Ticket</h5>
+                    <h5 class="modal-title">Approve Ticket Confirmation</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Reimbursement request form</p>
+                    <p>Approve ticket</p>
+                    <div class="p-2">
+                        <span>Ticket ID: </span>
+                        <input type="text" id="approve_id" class="form-control" aria-label="Amount" disabled>
+                    </div>
+                    <div class="p-2">
+                        <span>Author: </span>
+                        <input type="text" id="approve_author" class="form-control" aria-label="Amount" disabled>
+                    </div>
                     <div class="p-2">
                         <span>Amount</span>
                         <div class="input-group mb-3">
                             <span class="input-group-text">USD</span>
                             <span class="input-group-text">$</span>
-                            <input type="text" id="add_amount" class="form-control" aria-label="Amount">
+                            <input type="text" id="approve_amount" class="form-control" aria-label="Amount" disabled>
                         </div>
                     </div>
                     <div>
                         <label class="input-label">Type</label>
-                        <select name="reimb_type" id="add_type" class="form-control selectpicker">
-                            <option value="" selected disabled>Select your reimbursement type</option>
-                            <option value="travel_lodging">Lodging</option>
-                            <option value="travel_meal">Meal</option>
-                            <option value="travel_trip">Trip</option>
-                            <option value="travel_gas">Gas</option>
-                            <option value="travel_incidental">Incidental</option>
-                        </select>
+                        <input type="text" id="approve_type" class="form-control" aria-label="Amount" disabled>
                     </div>
+                    <div id="show-hide-info">
+
+                    </div>
+                    <div >
+                        <span>Show more</span>
+                        <span class="me-2">
+                            <i class="bi bi-chevron-double-down"></i>
+                        </span>
+                    </div>
+                    <!-- <div >
+                        <span>Show less</span>
+                        <span class="me-2">
+                            <i class="bi bi-chevron-double-up"></i>
+                        </span>
+                    </div> -->
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <!-- <button type="button" class="btn btn-primary disabled">Save changes</button> -->
-                    <button type="button" id="add_ticket_submit" class="btn btn-success">Submit</button>
+                    <div>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <!-- <button type="button" class="btn btn-primary disabled">Save changes</button> -->
+                        <button type="button" id="approve_ticket_submit" class="btn btn-success" onclick="ApproveReimbursement()">Approve</button>    
+                    </div>
+                    <div id="approve-result-display" class="col-lg-6">
+                        <!-- Error Message -->
+                    </div>
                 </div>
             </div>
     

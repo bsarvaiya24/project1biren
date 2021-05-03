@@ -54,4 +54,17 @@ public class SubmitterService {
 		return allReimbursementsDTO;
 	}
 
+	public void approveReimbursement(ReimbursementDTO reimbursementDTO) {
+		reimbursementDAO.approveReimbursement(reimbursementDTO);
+		return;
+	}
+
+	public boolean checkIfUserIsApprover(User user) {
+//		boolean allowedUser = userDAO.getUserByUser(user);
+		if(user.getRoleId().getErsUserRoleId() == 1) {
+			return true;
+		}
+		return false;
+	}
+
 }

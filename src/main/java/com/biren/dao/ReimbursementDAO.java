@@ -43,7 +43,7 @@ public class ReimbursementDAO {
 		session = SessionUtility.getSession().getCurrentSession();
 		Transaction tx1 = session.beginTransaction();
 		double dtoAmount = reimbursementDTO.getReimbAmount();
-		String dtoStringDate = reimbursementDTO.getReimbSubmitted();
+		String dtoStringDate = reimbursementDTO.getReimbSubmittedString();
 		Date dtoDate = null;
 		try {
 			dtoDate = parser.parse(dtoStringDate);
@@ -71,6 +71,21 @@ public class ReimbursementDAO {
 		List<Reimbursement> allReimbursements = (List<Reimbursement>) session.createQuery("FROM Reimbursement r").getResultList();
 		tx1.commit();
 		return allReimbursements;
+	}
+
+	public void approveReimbursement(ReimbursementDTO reimbursementDTO) {
+		session = SessionUtility.getSession().getCurrentSession();
+		Transaction tx1 = session.beginTransaction();
+		Reimbursement currentReimbursement = (Reimbursement) session.createQuery("FROM Reimbursement r WHERE r.reimbId = :id")
+				.setParameter("id", reimbursementDTO.getReimbId()).getSingleResult();
+		ReimbursementStatus approved = session.get(ReimbursementStatus.class, 3);
+		currentReimbursement.setReimbStatusId(approved);
+		currentReimbursement.setReimbResolver(reimbursementDTO.getReimbResolver());
+		currentReimbursement.setReimbResolved(reimbursementDTO.getReimbResolved());
+		
+		session.save(currentReimbursement);
+		tx1.commit();
+		return;
 	}
 
 }
