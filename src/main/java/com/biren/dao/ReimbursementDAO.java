@@ -1,21 +1,32 @@
 package com.biren.dao;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.sql.rowset.serial.SerialBlob;
+import javax.sql.rowset.serial.SerialException;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import com.biren.dto.ReimbursementDTO;
 import com.biren.exception.BadParameterException;
+import com.biren.exception.FileHandelingException;
+import com.biren.exception.UploadImageException;
 import com.biren.model.Reimbursement;
 import com.biren.model.ReimbursementStatus;
 import com.biren.model.ReimbursementType;
 import com.biren.model.User;
 import com.biren.utils.SessionUtility;
+
+import io.javalin.http.UploadedFile;
 
 public class ReimbursementDAO {
 	
@@ -38,7 +49,7 @@ public class ReimbursementDAO {
 		tx1.commit();
 		return userReimbursements;
 	}
-
+	
 	public ReimbursementDTO addReimbursement(ReimbursementDTO reimbursementDTO) throws BadParameterException {
 		session = SessionUtility.getSession().getCurrentSession();
 		Transaction tx1 = session.beginTransaction();
@@ -64,7 +75,7 @@ public class ReimbursementDAO {
 		tx1.commit();
 		return returnReimbursementDTO;
 	}
-
+	
 	public List<Reimbursement> latestApproverData() {
 		session = SessionUtility.getSession().getCurrentSession();
 		Transaction tx1 = session.beginTransaction();
@@ -86,6 +97,71 @@ public class ReimbursementDAO {
 		session.save(currentReimbursement);
 		tx1.commit();
 		return;
+	}
+	
+	public void denyReimbursement(ReimbursementDTO reimbursementDTO) {
+		session = SessionUtility.getSession().getCurrentSession();
+		Transaction tx1 = session.beginTransaction();
+		Reimbursement currentReimbursement = (Reimbursement) session.createQuery("FROM Reimbursement r WHERE r.reimbId = :id")
+				.setParameter("id", reimbursementDTO.getReimbId()).getSingleResult();
+		ReimbursementStatus denied = session.get(ReimbursementStatus.class, 5);
+		currentReimbursement.setReimbStatusId(denied);
+		currentReimbursement.setReimbResolver(reimbursementDTO.getReimbResolver());
+		currentReimbursement.setReimbResolved(reimbursementDTO.getReimbResolved());
+		
+		session.save(currentReimbursement);
+		tx1.commit();
+		return;
+	}
+
+	public void setImageOfReimbursement(int currentReimbId, UploadedFile file) throws UploadImageException {
+		session = SessionUtility.getSession().getCurrentSession();
+		Transaction tx1 = session.beginTransaction();
+		Blob blob = null;
+		//blob = new SerialBlob((Blob) file.component1());
+		//blob = (Blob) file.component1();
+		byte[] imageByteArray = read((ByteArrayInputStream) file.component1());
+		try {
+			blob = new javax.sql.rowset.serial.SerialBlob(imageByteArray);
+		} catch (SerialException e) {
+			throw new UploadImageException("Cannot read the uploaded file. Message: "+e.getMessage());
+		} catch (SQLException e) {
+			throw new UploadImageException("Cannot read the uploaded file. Message: "+e.getMessage());
+		}
+		Reimbursement currentReimbursement = (Reimbursement) session.createQuery("FROM Reimbursement r WHERE r.reimbId = :id")
+				.setParameter("id", currentReimbId).getSingleResult();
+		currentReimbursement.setReimbReceipt(blob);
+		session.save(currentReimbursement);
+		tx1.commit();
+		return;
+	}
+	
+	public byte[] read(ByteArrayInputStream bais) throws UploadImageException {
+	     byte[] array = new byte[bais.available()];
+	     try {
+			bais.read(array);
+		} catch (IOException e) {
+			throw new UploadImageException("Cannot read the uploaded file. Message: "+e.getMessage());
+		}
+
+	     return array;
+	}
+
+	
+	public byte[] getImageOfReimbursement(int currentReimbId) throws FileHandelingException {
+		session = SessionUtility.getSession().getCurrentSession();
+		Transaction tx1 = session.beginTransaction();
+		Reimbursement currentReimbursement = (Reimbursement) session.createQuery("FROM Reimbursement r WHERE r.reimbId = :id")
+				.setParameter("id", currentReimbId).getSingleResult();
+		Blob blob = currentReimbursement.getReimbReceipt();
+		byte[] bytes = null;
+		try {
+			bytes = blob.getBytes(1l, (int)blob.length());
+		} catch (SQLException e) {
+			throw new FileHandelingException("Something went wrong while retreiving the receipt data. Message: "+e.getMessage());
+		}
+		tx1.commit();
+		return bytes;
 	}
 
 }

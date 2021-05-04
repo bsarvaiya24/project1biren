@@ -263,6 +263,33 @@ function showApprovedModal(e) {
     let currentReimbursementId = (e.target.attributes.id.value).split('_')[2];
 
     $('#modal_approve').modal('show');
+    let denyBtn = document.querySelector("#deny_ticket_submit");
+    denyBtn.style.display = "none";
+
+    let currentReimbursement = reimbursementData.filter(r => { return r.reimbId == currentReimbursementId })[0];
+    // let currentReimbursement = currentReimbursementList[0];
+
+    let modalApproveId = document.querySelector("#approve_id");
+    modalApproveId.value = currentReimbursement.reimbId;
+
+    let modalApproveAuthor = document.querySelector("#approve_author");
+    modalApproveAuthor.value = (currentReimbursement.reimbAuthor.firstName)+" "+(currentReimbursement.reimbAuthor.lastName);
+
+    let modalApproveAmount = document.querySelector("#approve_amount");
+    modalApproveAmount.value = currentReimbursement.reimbAmount;
+
+    let modalApproveType = document.querySelector("#approve_type");
+    modalApproveType.value = currentReimbursement.reimbTypeId.reimbType;
+
+}
+
+function showDeniedModal(e) {
+    let currentReimbursementId = (e.target.attributes.id.value).split('_')[2];
+
+    $('#modal_approve').modal('show');
+    let denyBtn = document.querySelector("#approve_ticket_submit");
+    denyBtn.style.display = "none";
+
     let currentReimbursement = reimbursementData.filter(r => { return r.reimbId == currentReimbursementId })[0];
     // let currentReimbursement = currentReimbursementList[0];
 
@@ -311,6 +338,42 @@ function ApproveReimbursement() {
         pElement.innerHTML = 'Reimbursement successfully approved.';
 
         divElement.appendChild(pElement);
+        renderLastReimbursementData()
+    })
+}
+
+function DenyReimbursement() {
+    let reimbursementId = document.querySelector('#approve_id').value;
+
+    let data = {
+        reimbId: reimbursementId,
+    };
+
+    fetch('http://localhost:7000/deny_reimbursement', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    }).then((response) => {
+        if (response.status === 400) {
+            displayBadParameterFail();
+        } else if (response.status === 404){
+            displayRetrieveFail();
+        }
+        // return response.json();
+    }).then(() => {
+        let divElement = document.querySelector('#approve-result-display');
+        divElement.style.display="block";
+        divElement.innerHTML = '';
+
+        let pElement = document.createElement('p');
+        pElement.style.color = 'green';
+        pElement.innerHTML = 'Reimbursement successfully denied.';
+
+        divElement.appendChild(pElement);
+        renderLastReimbursementData()
     })
 }
 

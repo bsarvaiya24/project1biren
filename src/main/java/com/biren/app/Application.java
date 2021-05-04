@@ -1,5 +1,7 @@
 package com.biren.app;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -83,11 +85,18 @@ public class Application {
 //		
 //		Transaction tx4 = session.beginTransaction();
 //		
-//		User user1 = new User("Himseepenst","sa4EiB6yie","Roberto","Symons","RobertoLSymons@armyspy.com",approver);
-//		User user2 = new User("Swerhat","Ohgh1doh","Rebecca","Carrasquillo","RebeccaLCarrasquillo@dayrep.com",approver);
-//		User user3 = new User("Evin1990","aipa0Fahnga","Verna","Luman","VernaVLuman@dayrep.com",submitter);
-//		User user4 = new User("Knounge","pheeH6bie","Michael","Harris","MichaelKHarris@armyspy.com",submitter);
-//		User user5 = new User("Roldho","Oos0iecie","Vernon","Irwin","VernonSIrwin@rhyta.com",submitter);
+//		String user1password = hashPassword("sa4EiB6yie");
+//		String user2password = hashPassword("Ohgh1doh");
+//		String user3password = hashPassword("aipa0Fahnga");
+//		String user4password = hashPassword("pheeH6bie");
+//		String user5password = hashPassword("Oos0iecie");
+//		
+//		
+//		User user1 = new User("Himseepenst",user1password,"Roberto","Symons","RobertoLSymons@armyspy.com",approver);
+//		User user2 = new User("Swerhat",user2password,"Rebecca","Carrasquillo","RebeccaLCarrasquillo@dayrep.com",approver);
+//		User user3 = new User("Evin1990",user3password,"Verna","Luman","VernaVLuman@dayrep.com",submitter);
+//		User user4 = new User("Knounge",user4password,"Michael","Harris","MichaelKHarris@armyspy.com",submitter);
+//		User user5 = new User("Roldho",user5password,"Vernon","Irwin","VernonSIrwin@rhyta.com",submitter);
 //		
 //		session.save(user1);
 //		session.save(user2);
@@ -156,5 +165,31 @@ public class Application {
 			c.mapEndpoints(app);
 		}
 	}
+	
+	public static String hashPassword(String password) {
+        
+        String generatedPassword = null;
+        try {
+            // Create MessageDigest instance for MD5
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            //Add password bytes to digest
+            md.update(password.getBytes());
+            //Get the hash's bytes 
+            byte[] bytes = md.digest();
+            //This bytes[] has bytes in decimal format;
+            //Convert it to hexadecimal format
+            StringBuilder sb = new StringBuilder();
+            for(int i=0; i< bytes.length ;i++) {
+                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+            }
+            //Get complete hashed password in hex format
+            generatedPassword = sb.toString();
+        } 
+        catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return generatedPassword;
+        
+    }
 
 }

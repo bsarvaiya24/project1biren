@@ -206,23 +206,23 @@
                     <p>Approve ticket</p>
                     <div class="p-2">
                         <span>Ticket ID: </span>
-                        <input type="text" id="approve_id" class="form-control" aria-label="Amount" disabled>
+                        <input type="text" id="approve_id" class="form-control" disabled>
                     </div>
                     <div class="p-2">
                         <span>Author: </span>
-                        <input type="text" id="approve_author" class="form-control" aria-label="Amount" disabled>
+                        <input type="text" id="approve_author" class="form-control" disabled>
                     </div>
                     <div class="p-2">
                         <span>Amount</span>
                         <div class="input-group mb-3">
                             <span class="input-group-text">USD</span>
                             <span class="input-group-text">$</span>
-                            <input type="text" id="approve_amount" class="form-control" aria-label="Amount" disabled>
+                            <input type="text" id="approve_amount" class="form-control" disabled>
                         </div>
                     </div>
                     <div>
                         <label class="input-label">Type</label>
-                        <input type="text" id="approve_type" class="form-control" aria-label="Amount" disabled>
+                        <input type="text" id="approve_type" class="form-control" disabled>
                     </div>
                     <div id="show-hide-info">
 
@@ -245,6 +245,7 @@
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <!-- <button type="button" class="btn btn-primary disabled">Save changes</button> -->
                         <button type="button" id="approve_ticket_submit" class="btn btn-success" onclick="ApproveReimbursement()">Approve</button>    
+                        <button type="button" id="deny_ticket_submit" class="btn btn-danger" onclick="DenyReimbursement()">Deny</button>    
                     </div>
                     <div id="approve-result-display" class="col-lg-6">
                         <!-- Error Message -->

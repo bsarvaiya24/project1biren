@@ -1,5 +1,7 @@
 package com.biren.service;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,9 +11,13 @@ import com.biren.dao.ReimbursementDAO;
 import com.biren.dao.UserDAO;
 import com.biren.dto.ReimbursementDTO;
 import com.biren.exception.BadParameterException;
+import com.biren.exception.FileHandelingException;
 import com.biren.exception.ReimbursementsNotFoundException;
+import com.biren.exception.UploadImageException;
 import com.biren.model.Reimbursement;
 import com.biren.model.User;
+
+import io.javalin.http.UploadedFile;
 
 public class SubmitterService {
 	
@@ -60,11 +66,54 @@ public class SubmitterService {
 	}
 
 	public boolean checkIfUserIsApprover(User user) {
-//		boolean allowedUser = userDAO.getUserByUser(user);
 		if(user.getRoleId().getErsUserRoleId() == 1) {
 			return true;
 		}
 		return false;
+	}
+
+	public void denyReimbursement(ReimbursementDTO reimbursementDTO) {
+		reimbursementDAO.denyReimbursement(reimbursementDTO);
+		return;
+	}
+
+	public void checkIfReimbursementExists(String currentReimbIdString) {
+		
+		
+	}
+
+	public List<ReimbursementDTO> getUploadPendingReimbursements(User user) {
+		List<Reimbursement> userReimbursements = reimbursementDAO.getReimbursementsByUser(user);
+		System.out.println("reimbursements found");
+		List<ReimbursementDTO> userReimbursementsDTO = new ArrayList<ReimbursementDTO>();
+//		if(userReimbursementsDTO.isEmpty()) {
+//			throw new ReimbursementsNotFoundException("No Reimbursements found for the given user");
+//		}
+		userReimbursements.sort((o1,o2) -> o2.getReimbSubmitted().compareTo(o1.getReimbSubmitted()));
+		for(Reimbursement r:userReimbursements) {
+			if(r.getReimbStatusId().getReimbStatusId()<3) {
+				if(r.getReimbReceipt()==null) {
+					System.out.println("no blob found in one reimbursement");
+					userReimbursementsDTO.add(new ReimbursementDTO(r));
+				}
+			}
+		}
+		return userReimbursementsDTO;
+	}
+
+	public void setImageOfReimbursement(String currentReimbIdString, UploadedFile file) throws UploadImageException {
+		int currentReimbId = Integer.parseInt(currentReimbIdString);
+//		reimbursementDAO.checkIfReimbursementExists(currentReimbIdString);
+		reimbursementDAO.setImageOfReimbursement(currentReimbId,file);
+		return;
+	}
+
+	
+	public InputStream getImageOfReimbursement(String currentReimbIdString) throws FileHandelingException {
+		int currentReimbId = Integer.parseInt(currentReimbIdString);
+		byte[] bytes = reimbursementDAO.getImageOfReimbursement(currentReimbId);
+		InputStream targetStream = new ByteArrayInputStream(bytes);
+		return targetStream;
 	}
 
 }

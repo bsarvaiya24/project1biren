@@ -1,5 +1,6 @@
 package com.biren.dto;
 
+import java.sql.Blob;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -94,6 +95,9 @@ public class ReimbursementDTO {
 		//TODO: Turn to UserDTO
 		this.reimbAuthor = r.getReimbAuthor();
 		//TODO: Turn to UserDTO
+		if(r.getReimbReceipt()!=null) {
+			this.reimbReceipt = "not null";
+		}
 		this.reimbResolver = r.getReimbResolver();
 		this.reimbStatusId = r.getReimbStatusId();
 		this.reimbTypeId = r.getReimbTypeId();

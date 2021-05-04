@@ -1,5 +1,7 @@
 package com.biren.model;
 
+import java.io.ByteArrayInputStream;
+import java.sql.Blob;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -36,7 +38,7 @@ public class Reimbursement {
 	
 	//TODO
 	@Column(name = "reimb_receipt")
-	private String reimbReceipt;
+	private Blob reimbReceipt;
 	
 	@ManyToOne
 	@JoinColumn(name = "ers_user_id_author", nullable = false) 
@@ -108,11 +110,11 @@ public class Reimbursement {
 		this.reimbDescription = reimbDescription;
 	}
 
-	public String getReimbReceipt() {
+	public Blob getReimbReceipt() {
 		return reimbReceipt;
 	}
 
-	public void setReimbReceipt(String reimbReceipt) {
+	public void setReimbReceipt(Blob reimbReceipt) {
 		this.reimbReceipt = reimbReceipt;
 	}
 
