@@ -580,6 +580,7 @@ function createChart(){
         .call(xAxis.ticks(null).tickSize(0))
         .append("text")
             .style("text-anchor", "middle")
+            .text("Value")
             .attr("transform", "rotate(-90)" );
 
     svg.append("g")

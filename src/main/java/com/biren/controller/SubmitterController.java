@@ -26,7 +26,6 @@ public class SubmitterController implements Controller {
 		super();
 	}
 
-	//Done
 	private Handler populateDataByUserId = (ctx) -> {
 		User user = (User) ctx.sessionAttribute("currentlyLoggedInUser");
 		if (user == null) {
@@ -56,7 +55,6 @@ public class SubmitterController implements Controller {
 		}
 	};
 	
-	//Done
 	private Handler addReimbursement = (ctx) -> {
 		User user = (User) ctx.sessionAttribute("currentlyLoggedInUser");
 		if (user == null) {
@@ -96,7 +94,6 @@ public class SubmitterController implements Controller {
 		ctx.status(200);
 	};
 
-	//TODO
 	private Handler latestApproverData = (ctx) -> {
 		User user = (User) ctx.sessionAttribute("currentlyLoggedInUser");
 		if (user == null) {
