@@ -109,20 +109,32 @@ function renderCurrentUserData() {
             tr.appendChild(td7);
 
             td8 = document.createElement("td");
-            if(data[i].reimbReceipt != null){
+            if(data[i].reimbStatusId.reimbStatusId<3){
+
                 tdActionBtn = document.createElement("button");
                 tdActionBtn.classList.add("btn");
-                tdActionBtn.classList.add("btn-info");
                 tdActionBtn.type = "button";
                 tdActionBtn.setAttribute("id", "reimb_Receipt_"+data[i].reimbId);
                 tdActionBtn.addEventListener("click", showReceiptModal);
+
                 tdActionBtnSymbol = document.createElement("i");
                 tdActionBtnSymbol.classList.add("bi");
-                tdActionBtnSymbol.classList.add("bi-image");
                 tdActionBtnSymbol.setAttribute("id", "reimbReceipt_symbol_"+data[i].reimbId);
-                tdActionBtn.appendChild(tdActionBtnSymbol);
-                td8.appendChild(tdActionBtn);
-            } else {
+
+                if(data[i].reimbReceipt != null){
+                    tdActionBtn.classList.add("btn-info");
+                    tdActionBtnSymbol.classList.add("bi-image");
+                    tdActionBtn.appendChild(tdActionBtnSymbol);
+                    td8.appendChild(tdActionBtn);
+                } else {
+                    tdActionBtn.classList.add("btn-warning");
+                    tdActionBtn.disabled = true;
+                    tdActionBtnSymbol.classList.add("bi-exclamation-triangle-fill");
+                    tdActionBtn.appendChild(tdActionBtnSymbol);
+                    td8.appendChild(tdActionBtn);
+                }
+            }
+             else {
                 tdText8 = document.createTextNode("");
                 td8.appendChild(tdText8);
             }
@@ -152,19 +164,10 @@ function showModalTicketForm() {
 }
 
 function showModalUploadForm() {
-    // window.location.href = '/submit_reimbursement.html';
-    // document.querySelector("#dashboard").style.display = "none";
-    // document.querySelector("#add_ticket").style.display = "block";
-    // console.log("modalTicketForm initialized");
     $('#upload_modal').modal('show');
-    // let amount = document.querySelector('#add_amount');
-    // let type = document.querySelector('#add_type');
-    // amount.value = "";
-    // type.value = "";
-    // let divElement = document.querySelector('#add-result-display');
-    // divElement.style.display="none";
 
     let uploadReimbRadioGroup = document.querySelector('#upload-for-pending-reimbursements');
+    uploadReimbRadioGroup.innerHTML = "";
     let uploadPendingReimbursementList;
 
 
@@ -214,12 +217,10 @@ function showModalUploadForm() {
 function showReceiptModal(e) {
     let currentReimbursementId = (e.target.attributes.id.value).split('_')[2];
 
-    // console.log(e.target);
-    // console.log(currentReimbursementId);
-
     $('#display_modal').modal('show');
 
     let imgContainer = document.querySelector("#display-img-fill");
+    imgContainer.innerHTML = "";
     let imgElement = document.createElement("img");
     imgElement.src = "http://localhost:7000/reimbursement_receipt/"+currentReimbursementId;
     imgContainer.appendChild(imgElement);
@@ -312,6 +313,7 @@ function submitUploadImage() {
         pElement.innerHTML = 'Image successfully uploaded.';
 
         divElement.appendChild(pElement);
+        renderCurrentUserData();
     });
     
     // let amount = document.querySelector('#add_amount').value;

@@ -38,16 +38,16 @@ public class ReimbursementDTO {
 		this.reimbId = reimbId;
 	}
 
-	public ReimbursementDTO(int reimbId, double reimbAmount, Date reimbSubmitted, User reimbAuthor,
-			ReimbursementStatus reimbStatusId, ReimbursementType reimbTypeId) {
-		super();
-		this.reimbId = reimbId;
-		this.reimbAmount = reimbAmount;
-		this.reimbSubmittedString = formatter.format(reimbSubmitted);
-		this.reimbAuthor = reimbAuthor;
-		this.reimbStatusId = reimbStatusId;
-		this.reimbTypeId = reimbTypeId;
-	}
+//	public ReimbursementDTO(int reimbId, double reimbAmount, Date reimbSubmitted, User reimbAuthor,
+//			ReimbursementStatus reimbStatusId, ReimbursementType reimbTypeId) {
+//		super();
+//		this.reimbId = reimbId;
+//		this.reimbAmount = reimbAmount;
+//		this.reimbSubmittedString = formatter.format(reimbSubmitted);
+//		this.reimbAuthor = reimbAuthor;
+//		this.reimbStatusId = reimbStatusId;
+//		this.reimbTypeId = reimbTypeId;
+//	}
 	
 	// /add_reimbursement Controller
 	public ReimbursementDTO(double reimbAmount, String reimbSubmittedString, int reimbStatusId, String reimbTypeId) {
@@ -58,26 +58,26 @@ public class ReimbursementDTO {
 		this.reimbTypeIdString = reimbTypeId;
 	}
 	
-	public ReimbursementDTO(double reimbAmount, String reimbSubmitted, User reimbAuthor,
-			ReimbursementStatus reimbStatusId, ReimbursementType reimbTypeId) {
-		super();
-		this.reimbAmount = reimbAmount;
-		this.reimbSubmittedString = reimbSubmitted;
-		this.reimbAuthor = reimbAuthor;
-		this.reimbStatusId = reimbStatusId;
-		this.reimbTypeId = reimbTypeId;
-	}
+//	public ReimbursementDTO(double reimbAmount, String reimbSubmitted, User reimbAuthor,
+//			ReimbursementStatus reimbStatusId, ReimbursementType reimbTypeId) {
+//		super();
+//		this.reimbAmount = reimbAmount;
+//		this.reimbSubmittedString = reimbSubmitted;
+//		this.reimbAuthor = reimbAuthor;
+//		this.reimbStatusId = reimbStatusId;
+//		this.reimbTypeId = reimbTypeId;
+//	}
 
-	public ReimbursementDTO(int reimbId, double reimbAmount, String reimbSubmitted, User reimbAuthor,
-			ReimbursementStatus reimbStatusId, ReimbursementType reimbTypeId) {
-		super();
-		this.reimbId = reimbId;
-		this.reimbAmount = reimbAmount;
-		this.reimbSubmittedString = reimbSubmitted;
-		this.reimbAuthor = reimbAuthor;
-		this.reimbStatusId = reimbStatusId;
-		this.reimbTypeId = reimbTypeId;
-	}
+//	public ReimbursementDTO(int reimbId, double reimbAmount, String reimbSubmitted, User reimbAuthor,
+//			ReimbursementStatus reimbStatusId, ReimbursementType reimbTypeId) {
+//		super();
+//		this.reimbId = reimbId;
+//		this.reimbAmount = reimbAmount;
+//		this.reimbSubmittedString = reimbSubmitted;
+//		this.reimbAuthor = reimbAuthor;
+//		this.reimbStatusId = reimbStatusId;
+//		this.reimbTypeId = reimbTypeId;
+//	}
 	
 	// /populate_data : getReimbursementsByUser()
 	// /add_reimbursement DAO

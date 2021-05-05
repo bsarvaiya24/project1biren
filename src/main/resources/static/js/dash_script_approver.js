@@ -104,6 +104,7 @@ function filterDenied(){
 }
 
 function populateDashboardTable(data){
+    createChart();
     let tBody = document.querySelector("#dashboard_table_body");
     tBody.innerHTML = "";
     for (i in data){
@@ -190,7 +191,9 @@ function populateDashboardTable(data){
             tdActionUl.appendChild(tdActionLi3);
 
             tdActionLi4 = document.createElement("li");
+            tdActionLi4.addEventListener("click", showDeniedModal);
             tdActionA4 = document.createElement("a");
+            tdActionA4.id = "a_deny_"+data[i].reimbId;
             tdActionA4.classList.add("dropdown-item");
             //TODO: add ID for event listener, or OnClick to perform action
             tdActionA4Text = document.createTextNode("Deny");
@@ -241,6 +244,38 @@ function populateDashboardTable(data){
         }
         tr.appendChild(td9);
 
+        td10 = document.createElement("td");
+        if(data[i].reimbStatusId.reimbStatusId<3){
+
+            tdActionBtn = document.createElement("button");
+            tdActionBtn.classList.add("btn");
+            tdActionBtn.type = "button";
+            tdActionBtn.setAttribute("id", "reimb_Receipt_"+data[i].reimbId);
+            tdActionBtn.addEventListener("click", showReceiptModal);
+
+            tdActionBtnSymbol = document.createElement("i");
+            tdActionBtnSymbol.classList.add("bi");
+            tdActionBtnSymbol.setAttribute("id", "reimbReceipt_symbol_"+data[i].reimbId);
+
+            if(data[i].reimbReceipt != null){
+                tdActionBtn.classList.add("btn-info");
+                tdActionBtnSymbol.classList.add("bi-image");
+                tdActionBtn.appendChild(tdActionBtnSymbol);
+                td10.appendChild(tdActionBtn);
+            } else {
+                tdActionBtn.classList.add("btn-warning");
+                tdActionBtn.disabled = true;
+                tdActionBtnSymbol.classList.add("bi-exclamation-triangle-fill");
+                tdActionBtn.appendChild(tdActionBtnSymbol);
+                td10.appendChild(tdActionBtn);
+            }
+        }
+            else {
+            tdText10 = document.createTextNode("");
+            td10.appendChild(tdText10);
+        }
+        tr.appendChild(td10);
+
         tBody.appendChild(tr);
     }
 }
@@ -261,10 +296,13 @@ function modalTicketForm() {
 
 function showApprovedModal(e) {
     let currentReimbursementId = (e.target.attributes.id.value).split('_')[2];
-
-    $('#modal_approve').modal('show');
+    let approveBtn = document.querySelector("#approve_ticket_submit");
+    approveBtn.style.display = "block";
     let denyBtn = document.querySelector("#deny_ticket_submit");
     denyBtn.style.display = "none";
+
+
+    $('#modal_approve').modal('show');
 
     let currentReimbursement = reimbursementData.filter(r => { return r.reimbId == currentReimbursementId })[0];
     // let currentReimbursement = currentReimbursementList[0];
@@ -287,8 +325,10 @@ function showDeniedModal(e) {
     let currentReimbursementId = (e.target.attributes.id.value).split('_')[2];
 
     $('#modal_approve').modal('show');
-    let denyBtn = document.querySelector("#approve_ticket_submit");
-    denyBtn.style.display = "none";
+    let approveBtn = document.querySelector("#approve_ticket_submit");
+    approveBtn.style.display = "none";
+    let denyBtn = document.querySelector("#deny_ticket_submit");
+    denyBtn.style.display = "block";
 
     let currentReimbursement = reimbursementData.filter(r => { return r.reimbId == currentReimbursementId })[0];
     // let currentReimbursement = currentReimbursementList[0];
@@ -304,6 +344,19 @@ function showDeniedModal(e) {
 
     let modalApproveType = document.querySelector("#approve_type");
     modalApproveType.value = currentReimbursement.reimbTypeId.reimbType;
+
+}
+
+function showReceiptModal(e) {
+    let currentReimbursementId = (e.target.attributes.id.value).split('_')[2];
+
+    $('#display_modal').modal('show');
+
+    let imgContainer = document.querySelector("#display-img-fill");
+    imgContainer.innerHTML = "";
+    let imgElement = document.createElement("img");
+    imgElement.src = "http://localhost:7000/reimbursement_receipt/"+currentReimbursementId;
+    imgContainer.appendChild(imgElement);
 
 }
 
@@ -415,4 +468,171 @@ function logout() {
             console.log("Unable to logout");
         }
     })
+}
+
+function createChart(){
+
+    let margin = {top: 20, right: 20, bottom: 70, left: 40},
+        width = 700 - margin.left - margin.right,
+        height = 600 - margin.top - margin.bottom;
+
+    // let parseDate = d3.isoParse;
+    // let submittedArray;
+    // let amountArray;
+    let unsortedData= [];
+    let dataObj = {};
+    let submitArray = [];
+    for(i in reimbursementData){
+        let dataObj = {};
+        // submittedArray.add(parseDate(reimbursementData[i].reimbSubmittedString));
+        // amountArray.add(reimbursementData[i].reimbAmount);
+        dataObj.submit = reimbursementData[i].reimbSubmittedString;
+        // dataObj.submit = Date.parse(reimbursementData[i].reimbSubmittedString);
+        submitArray = Date.parse(reimbursementData[i].reimbSubmittedString);
+        // console.log("String "+reimbursementData[i].reimbSubmittedString);
+        // console.log("Date "+dataObj.submit);
+        dataObj.amount = reimbursementData[i].reimbAmount;
+
+        unsortedData.push(dataObj);
+    }
+
+    let uncleanData = unsortedData.reverse();
+    console.log(uncleanData);
+    
+    let dates = uncleanData.map(function(x) { return new Date(x.submit); })
+
+    var latest = new Date(Math.max.apply(null,dates));
+    var earliest = new Date(Math.min.apply(null,dates));
+
+    function monthDiff(d1, d2) {
+        var months;
+        months = (d2.getFullYear() - d1.getFullYear()) * 12;
+        months -= d1.getMonth();
+        months += d2.getMonth();
+        return months <= 0 ? 0 : months;
+    }
+
+    let dataRows = monthDiff(earliest,latest);
+
+    let data = [];
+    let month = parseInt(uncleanData[0].submit.split('/')[1]);
+    let year = parseInt(uncleanData[0].submit.split('/')[0]);
+    for(i = 0; i<=dataRows; i++,month++){
+        let dataObj = {}
+        dataObj.amount = 0;
+        for(j in uncleanData){
+            if(parseInt(uncleanData[j].submit.split('/')[1]) == month && (uncleanData[j].submit.split('/')[0]) == year){
+                dataObj.submit = (uncleanData[j].submit.split('/')[0])+"-"+(uncleanData[j].submit.split('/')[0]);
+                dataObj.amount += uncleanData[j].amount;
+            }
+        }
+        data.push(dataObj);
+        if(month==12){
+            month=0;
+            year++;
+        }
+    }
+
+    // for(year = data[0].submit.getUTCFullYear(); year<=data[data.length-1].submit.getUTCFullYear(); year++){
+    //     for(month = data[0].submit.getUTCMonth()+1){
+
+    //     }
+    // }
+
+    // x = d3.scaleOrdinal()
+    //     .domain(data.map(d => d.submit))
+    //     .range([0, width]);
+    
+    // x = d3.scaleBand()
+    x = d3.scaleOrdinal()
+        .domain(data.map(function(d) { return Date.parse(d.date); }))
+        .range([0, width]);
+
+    y = d3.scaleLinear()
+        .domain([0, d3.max(data, d => d.amount)+100])
+        .range([height, 0]);
+
+    // xFormat = "%Y-%b-%d";
+    // parseTime = d3.timeParse("%Y/%m/%d");
+
+    xAxis = d3.axisBottom()
+        .scale(x)
+        .tickFormat(d3.timeFormat("%Y-%b"));
+
+    yAxis = d3.axisLeft()
+        .scale(y)
+        .ticks(10);
+
+    let svgDiv = document.getElementById("svg-div");
+    svgDiv.innerHTML = "";
+    
+    let svg = d3.select("#svg-div").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform",
+                "translate(" + margin.left + "," + margin.top + ")");
+    
+    
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis.ticks(null).tickSize(0))
+        .append("text")
+            .style("text-anchor", "middle")
+            .attr("transform", "rotate(-90)" );
+
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis.ticks(null).tickSize(0))
+        .append("text")
+            .attr("y", 6)
+            .style("text-anchor", "middle")
+            .text("Value");
+  
+    svg.selectAll("bar")
+        .data(data)
+        .enter().append("rect")
+            // if amount < certainAmount then color different
+            // .style("fill", function(d){ return d.value < d.target ? '#EF5F67': '#3FC974'})
+            .style("fill", "steelblue")
+            .attr("x", function(d,i) { return i*(x(d.submit)/(data.length)); })
+            // .attr("width", x.bandwidth()/data.length)
+            .attr("width", width/(data.length*2))
+            // .attr("width", 5)
+            .attr("y", function(d) { return y(d.amount); })
+            .attr("height", function(d) { return height - y(d.amount); });
+
+    // svg.selectAll("lines")
+    //     .data(data)
+    //     .enter().append("line")
+    //         .style("fill", 'none')
+    //         .attr("x1", function(d) { return (x(d.submit) + x.bandwidth()); })
+    //         .attr("x2", function(d) { return x(d.submit); })
+    //         .attr("y1", function(d) { return y(d.amount); })
+    //         .attr("y2", function(d) { return y(d.amount); })
+    //         .style("stroke-dasharray", [2,2])
+    //         .style("stroke", "#000000")
+    //         .style("stroke-width", 2);
+
+    // const svg = d3.create("svg").attr("viewBox", [0, 0, width, height]);
+    
+    // svg.append("g")
+    //     .attr("fill", color)
+    //     .selectAll("rect")
+    //     .data(data)
+    //     .join("rect")
+    //     .attr("x", (d, i) => x(i))
+    //     .attr("y", d => y(d.value))
+    //     .attr("height", d => y(0) - y(d.value))
+    //     .attr("width", x.bandwidth());
+    
+    // svg.append("g")
+    //     .call(xAxis);
+    
+    // svg.append("g")
+    //     .call(yAxis);
+    
+    // return svg.node();
+    
 }

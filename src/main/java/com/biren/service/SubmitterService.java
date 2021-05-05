@@ -28,13 +28,18 @@ public class SubmitterService {
 		super();
 	}
 
+	public SubmitterService(UserDAO userDAO, ReimbursementDAO reimbursementDAO) {
+		this.userDAO = userDAO;
+		this.reimbursementDAO = reimbursementDAO;
+	}
+
 	//Done
-	public List<ReimbursementDTO> getReimbursementsByUser(User user) throws ReimbursementsNotFoundException {
+	public List<ReimbursementDTO> getReimbursementsByUser(User user) throws ReimbursementsNotFoundException{
 		List<Reimbursement> userReimbursements = reimbursementDAO.getReimbursementsByUser(user);
 		List<ReimbursementDTO> userReimbursementsDTO = new ArrayList<ReimbursementDTO>();
-//		if(userReimbursementsDTO.isEmpty()) {
-//			throw new ReimbursementsNotFoundException("No Reimbursements found for the given user");
-//		}
+		if(userReimbursements==null) {
+			throw new ReimbursementsNotFoundException("No Reimbursements found for the given user");
+		}
 		userReimbursements.sort((o1,o2) -> o2.getReimbSubmitted().compareTo(o1.getReimbSubmitted()));
 		for(Reimbursement r:userReimbursements) {
 			userReimbursementsDTO.add(new ReimbursementDTO(r));
@@ -75,11 +80,6 @@ public class SubmitterService {
 	public void denyReimbursement(ReimbursementDTO reimbursementDTO) {
 		reimbursementDAO.denyReimbursement(reimbursementDTO);
 		return;
-	}
-
-	public void checkIfReimbursementExists(String currentReimbIdString) {
-		
-		
 	}
 
 	public List<ReimbursementDTO> getUploadPendingReimbursements(User user) {

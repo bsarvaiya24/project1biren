@@ -68,7 +68,6 @@ public class ReimbursementDAO {
 		ReimbursementType dtoReimbType = (ReimbursementType) session.createQuery("FROM ReimbursementType rt WHERE rt.reimbType=:dtoType")
 				.setParameter("dtoType", reimbursementDTO.getReimbTypeIdString()).getSingleResult();
 
-		// TODO: Adding new reimbursement here
 		Reimbursement reimb1 = new Reimbursement(dtoAmount,dtoDate,dtoAuthor,dtoReimbStatus,dtoReimbType);
 		session.save(reimb1);
 		ReimbursementDTO returnReimbursementDTO = new ReimbursementDTO(reimb1);

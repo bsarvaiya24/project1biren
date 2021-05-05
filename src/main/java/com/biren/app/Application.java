@@ -128,6 +128,57 @@ public class Application {
 //			reimb6 = new Reimbursement(70,parser.parse("2020-06-29"),user3,paid,travelGas);
 //			reimb7 = new Reimbursement(40,parser.parse("2020-06-29"),user3,paid,travelMeal);
 //			reimb8 = new Reimbursement(30,parser.parse("2020-07-02"),user3,paid,travelMeal);
+//			
+//			Reimbursement reimb9 = new Reimbursement(100,parser.parse("2020-08-02"),user4,paid,travelMeal);
+//			Reimbursement reimb10 = new Reimbursement(150,parser.parse("2020-08-02"),user4,paid,travelMeal);
+//			Reimbursement reimb11 = new Reimbursement(50,parser.parse("2020-08-02"),user4,paid,travelMeal);
+//			Reimbursement reimb12 = new Reimbursement(80,parser.parse("2020-09-02"),user4,paid,travelGas);
+//			Reimbursement reimb13 = new Reimbursement(400,parser.parse("2020-09-02"),user3,paid,travelLodging);
+//			Reimbursement reimb14 = new Reimbursement(60,parser.parse("2020-09-02"),user3,paid,travelMeal);
+//			Reimbursement reimb15 = new Reimbursement(180,parser.parse("2020-10-02"),user5,paid,travelMeal);
+//			Reimbursement reimb16 = new Reimbursement(140,parser.parse("2020-10-02"),user4,paid,travelMeal);
+//			Reimbursement reimb17 = new Reimbursement(90,parser.parse("2020-10-02"),user4,paid,travelGas);
+//			Reimbursement reimb18 = new Reimbursement(320,parser.parse("2020-11-02"),user4,paid,travelLodging);
+//			Reimbursement reimb19 = new Reimbursement(50,parser.parse("2020-11-02"),user4,paid,travelMeal);
+//			Reimbursement reimb20 = new Reimbursement(120,parser.parse("2020-12-02"),user3,paid,travelMeal);
+//			Reimbursement reimb21 = new Reimbursement(80,parser.parse("2020-12-02"),user5,paid,travelGas);
+//			Reimbursement reimb22 = new Reimbursement(40,parser.parse("2020-12-02"),user5,paid,travelMeal);
+//			Reimbursement reimb23 = new Reimbursement(170,parser.parse("2020-12-02"),user3,paid,travelLodging);
+//			Reimbursement reimb24 = new Reimbursement(130,parser.parse("2020-12-02"),user4,paid,travelMeal);
+//			Reimbursement reimb25 = new Reimbursement(75,parser.parse("2020-12-02"),user5,paid,travelMeal);
+//			Reimbursement reimb26 = new Reimbursement(55,parser.parse("2021-01-02"),user3,paid,travelMeal);
+//			Reimbursement reimb27 = new Reimbursement(125,parser.parse("2021-01-02"),user4,paid,travelMeal);
+//			Reimbursement reimb28 = new Reimbursement(95,parser.parse("2021-02-02"),user3,paid,travelGas);
+//			Reimbursement reimb29 = new Reimbursement(75,parser.parse("2021-02-02"),user3,paid,travelGas);
+//			Reimbursement reimb30 = new Reimbursement(135,parser.parse("2021-03-02"),user4,paid,travelMeal);
+//			Reimbursement reimb31 = new Reimbursement(105,parser.parse("2021-03-02"),user5,paid,travelMeal);
+//			Reimbursement reimb32 = new Reimbursement(20,parser.parse("2021-03-02"),user5,paid,travelMeal);
+//			
+//			session.save(reimb9);
+//			session.save(reimb10);
+//			session.save(reimb11);
+//			session.save(reimb12);
+//			session.save(reimb13);
+//			session.save(reimb14);
+//			session.save(reimb15);
+//			session.save(reimb16);
+//			session.save(reimb17);
+//			session.save(reimb18);
+//			session.save(reimb19);
+//			session.save(reimb20);
+//			session.save(reimb21);
+//			session.save(reimb22);
+//			session.save(reimb23);
+//			session.save(reimb24);
+//			session.save(reimb25);
+//			session.save(reimb26);
+//			session.save(reimb27);
+//			session.save(reimb28);
+//			session.save(reimb29);
+//			session.save(reimb30);
+//			session.save(reimb31);
+//			session.save(reimb32);
+//			
 //		} catch (ParseException e) {
 //			e.printStackTrace();
 //		}

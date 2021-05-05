@@ -2,6 +2,20 @@ document.querySelector('#login').addEventListener('click', login);
 // If user already logged in then move to dashboard [onload]
 
 function login(evt) {
+
+    let loginBtn = document.querySelector("#login");
+    loginBtn.innerHTML = "";
+
+    let spinner = document.createElement("span");
+    spinner.classList.add("spinner-border");
+    spinner.classList.add("spinner-border-sm");
+    spinner.setAttribute("role","status");
+    spinner.setAttribute("aria-hidden","true");
+    loginBtn.appendChild(spinner);
+
+    let loadingText = document.createTextNode("Loading...");
+    loginBtn.appendChild(loadingText);
+
     evt.preventDefault();
     let un = document.querySelector('#username').value;
     let pw = document.querySelector('#password').value;
