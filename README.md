@@ -1,5 +1,4 @@
 # Project 1 : Expense Reimbursement System
-Project1 Reimbursement WebApp project files
 
 ## Project Description
 The Expense Reimbursement System (ERS) will manage the process of reimbursing employees for expenses incurred while on company time. 
